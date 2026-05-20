@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors(
   {
        origin:
-      "https://crm-frontend-alpha-beige.vercel.app",
+      "https://crm-frontend-qqlz.vercel.app/",
       credentials: true,
   })
 );

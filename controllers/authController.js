@@ -2,19 +2,40 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+
 exports.register = async (req, res) => {
+
   try {
+
     const { name, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
+
+    if (!name || !email || !password) {
+
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+
+    }
+
+    const existingUser = await User.findOne({
+      email,
+    });
 
     if (existingUser) {
+
       return res.status(400).json({
         message: "User already exists",
       });
+
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const hashedPassword = await bcrypt.hash(
+      password,
+      10
+    );
+
 
     const user = await User.create({
       name,
@@ -23,24 +44,50 @@ exports.register = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "User Registered",
+      message: "User Registered Successfully",
       user,
     });
+
   } catch (error) {
-    res.status(500).json(error);
+
+    console.log("REGISTER ERROR:", error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+
   }
+
 };
 
+
 exports.login = async (req, res) => {
+
   try {
+
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+
+    if (!email || !password) {
+
+      return res.status(400).json({
+        message: "Email and Password required",
+      });
+
+    }
+
+    // Find user
+
+    const user = await User.findOne({
+      email,
+    });
 
     if (!user) {
+
       return res.status(400).json({
         message: "Invalid Email",
       });
+
     }
 
     const isMatch = await bcrypt.compare(
@@ -49,9 +96,11 @@ exports.login = async (req, res) => {
     );
 
     if (!isMatch) {
+
       return res.status(400).json({
         message: "Invalid Password",
       });
+
     }
 
     const token = jwt.sign(
@@ -64,13 +113,21 @@ exports.login = async (req, res) => {
         expiresIn: "7d",
       }
     );
-
-    res.json({
+    
+    res.status(200).json({
       message: "Login Success",
       token,
       user,
     });
+
   } catch (error) {
-    res.status(500).json(error);
+
+    console.log("LOGIN ERROR:", error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+
   }
+
 };
