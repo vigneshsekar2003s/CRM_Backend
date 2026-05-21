@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+
 const authRoutes = require("./routes/authRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const leadRoutes = require("./routes/leadRoutes");
@@ -9,18 +10,11 @@ const taskRoutes = require("./routes/taskRoutes");
 
 dotenv.config();
 
-
 const app = express();
 
 app.use(express.json());
 
-app.use(
-  cors({
-       origin:"https://crm-frontend-6wof.vercel.app",
-       credentials: true,
-  })
-);
-
+app.use(cors());
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -38,6 +32,6 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0",() => {
   console.log(`Server running on ${PORT}`);
 });
