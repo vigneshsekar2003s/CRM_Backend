@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+/* REGISTER USER */
 
 exports.register = async (req, res) => {
 
@@ -9,6 +10,7 @@ exports.register = async (req, res) => {
 
     const { name, email, password } = req.body;
 
+    /* Validation */
 
     if (!name || !email || !password) {
 
@@ -17,6 +19,8 @@ exports.register = async (req, res) => {
       });
 
     }
+
+    /* Check Existing User */
 
     const existingUser = await User.findOne({
       email,
@@ -30,18 +34,22 @@ exports.register = async (req, res) => {
 
     }
 
+    /* Hash Password */
 
     const hashedPassword = await bcrypt.hash(
       password,
       10
     );
 
+    /* Create User */
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
     });
+
+    /* Success Response */
 
     res.status(201).json({
       message: "User Registered Successfully",
@@ -60,10 +68,19 @@ exports.register = async (req, res) => {
 
 };
 
+/* LOGIN USER */
 
 exports.login = async (req, res) => {
 
   try {
+
+    if (!req.body) {
+
+      return res.status(400).json({
+        message: "Request body missing",
+      });
+
+    }
 
     const { email, password } = req.body;
 
@@ -76,7 +93,6 @@ exports.login = async (req, res) => {
 
     }
 
-    // Find user
 
     const user = await User.findOne({
       email,
@@ -89,6 +105,8 @@ exports.login = async (req, res) => {
       });
 
     }
+
+    /* Compare Password */
 
     const isMatch = await bcrypt.compare(
       password,
@@ -103,6 +121,8 @@ exports.login = async (req, res) => {
 
     }
 
+    /* Generate JWT Token */
+
     const token = jwt.sign(
       {
         id: user._id,
@@ -113,7 +133,9 @@ exports.login = async (req, res) => {
         expiresIn: "7d",
       }
     );
-    
+
+    /* Success Response */
+
     res.status(200).json({
       message: "Login Success",
       token,
