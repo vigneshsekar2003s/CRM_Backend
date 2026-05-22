@@ -19,7 +19,7 @@ app.use(
     origin:
     [ "https://crm-frontend-seven-alpha.vercel.app",
       "https://crm-frontend-6wof.vercel.app",
-      "http://localhost:5173"
+      "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
