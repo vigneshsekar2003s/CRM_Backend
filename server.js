@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(
   cors({
     origin:
-    [ "https://crm-frontend-seven-alpha.vercel.app",
-      "http://localhost:5173",
+    [ "https://crm-frontend-36rp.vercel.app",
+      "http://localhost:5174",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
