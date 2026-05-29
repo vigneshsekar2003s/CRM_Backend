@@ -16,11 +16,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin:
-    [ "https://crm-frontend-36rp.vercel.app",
-      "http://localhost:5174",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: true,
     credentials: true,
   })
 );
@@ -37,6 +33,12 @@ app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
   res.send("CRM Backend Running");
+});
+
+app.get("/test", (req, res) => {
+  res.json({
+    message: "Latest Backend Working",
+  });
 });
 
 const PORT = process.env.PORT || 5000;
